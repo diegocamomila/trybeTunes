@@ -64,7 +64,7 @@ class Login extends React.Component {
     if (redirect) {
       return <Redirect to="/search" />;
     }
-
+    // https://qastack.com.br/programming/43230194/how-to-use-redirect-in-the-new-react-router-dom-of-reactjs
     return (
       <div data-testid="page-login">
         <form>
