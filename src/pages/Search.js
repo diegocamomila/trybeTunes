@@ -1,9 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Carregando from '../components/Carregando';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
-// import { createUser } from '../services/userAPI';
-// import { Redirect } from 'react-router-dom';
 
 const MIN_LENGTH = 2;
 class Search extends React.Component {
@@ -16,6 +15,7 @@ class Search extends React.Component {
       loading: false,
       artist: '',
       dataBand: [],
+      errorAPI: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -25,10 +25,12 @@ class Search extends React.Component {
   handleClick = async () => {
     const { inputNameBand } = this.state;
     const dataAPI = await searchAlbumsAPI(inputNameBand);
+    const falhaAPI = dataAPI.length === 0;
     this.setState({
       inputNameBand: '',
       artist: inputNameBand,
       dataBand: dataAPI,
+      errorAPI: falhaAPI,
     });
   }
 
@@ -55,7 +57,8 @@ class Search extends React.Component {
       isDisabled,
       loading,
       artist,
-      // dataBand,
+      dataBand,
+      errorAPI,
     } = this.state;
 
     if (loading) {
@@ -88,9 +91,26 @@ class Search extends React.Component {
         </form>
 
         <div>
-          <h4>{`Resultado de álbuns de: ${artist}`}</h4>
+          {(errorAPI === false)
+            ? <h4>{`Resultado de álbuns de: ${artist}`}</h4>
+            : <span>Nenhum álbum foi encontrado</span>}
         </div>
-
+        <section>
+          {dataBand
+            .map(({ artistName, collectionName, artworkUrl100, collectionId }) => (
+              <>
+                <Link
+                  key={ collectionId }
+                  to={ `album/${collectionId}` }
+                  data-testid={ `link-to-album-${collectionId}` }
+                />
+                {/* </Link> */}
+                <img src={ artworkUrl100 } alt={ collectionName } />
+                <p>{ collectionName }</p>
+                <p>{ artistName }</p>
+              </>
+            ))}
+        </section>
       </div>
     );
   }
