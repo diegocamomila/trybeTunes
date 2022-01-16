@@ -1,4 +1,7 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
+import { createUser } from '../services/userAPI';
+import Carregando from '../components/Carregando';
 
 const MIN_LENGTH = 3;
 
@@ -9,10 +12,25 @@ class Login extends React.Component {
     this.state = {
       inputName: '',
       isDisabled: true,
+      loading: false,
+      redirect: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.validadteInput = this.validadteInput.bind(this);
+  }
+
+  handleClick = () => {
+    const { inputName } = this.state;
+    this.setState({
+      loading: true,
+    });
+    createUser({ name: inputName }).then(() => {
+      this.setState({
+        loading: false,
+        redirect: true,
+      });
+    });
   }
 
   handleChange({ name, value }) {
@@ -36,7 +54,16 @@ class Login extends React.Component {
     const {
       inputName,
       isDisabled,
+      loading,
+      redirect,
     } = this.state;
+
+    if (loading) {
+      return <Carregando />;
+    }
+    if (redirect) {
+      return <Redirect to="/search" />;
+    }
 
     return (
       <div data-testid="page-login">
@@ -57,6 +84,7 @@ class Login extends React.Component {
             data-testid="login-submit-button"
             type="submit"
             disabled={ isDisabled }
+            onClick={ this.handleClick }
           >
             Entrar
           </button>
