@@ -1,8 +1,9 @@
 import React from 'react';
 import Header from '../components/Header';
+import Carregando from '../components/Carregando';
+import searchAlbumsAPI from '../services/searchAlbumsAPI';
 // import { createUser } from '../services/userAPI';
 // import { Redirect } from 'react-router-dom';
-// import Carregando from '../components/Carregando';
 
 const MIN_LENGTH = 2;
 class Search extends React.Component {
@@ -12,26 +13,24 @@ class Search extends React.Component {
     this.state = {
       inputNameBand: '',
       isDisabled: true,
-    //  loading: false,
-    //  redirect: false,
+      loading: false,
+      artist: '',
+      dataBand: [],
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.validadteInput = this.validadteInput.bind(this);
   }
 
-  // handleClick = () => {
-  //   const { inputName } = this.state;
-  //   this.setState({
-  //     loading: true,
-  //   });
-  //   createUser({ name: inputName }).then(() => {
-  //     this.setState({
-  //       loading: false,
-  //       redirect: true,
-  //     });
-  //   });
-  // }
+  handleClick = async () => {
+    const { inputNameBand } = this.state;
+    const dataAPI = await searchAlbumsAPI(inputNameBand);
+    this.setState({
+      inputNameBand: '',
+      artist: inputNameBand,
+      dataBand: dataAPI,
+    });
+  }
 
   handleChange({ name, value }) {
     this.setState({
@@ -54,10 +53,14 @@ class Search extends React.Component {
     const {
       inputNameBand,
       isDisabled,
-      // loading,
-      // redirect,
+      loading,
+      // artist,
+      // dataBand,
     } = this.state;
 
+    if (loading) {
+      return <Carregando />;
+    }
     return (
       <div data-testid="page-search">
         <Header />
@@ -83,6 +86,7 @@ class Search extends React.Component {
             Pesquisar
           </button>
         </form>
+
       </div>
     );
   }
