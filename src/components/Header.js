@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { getUser } from '../services/userAPI';
 import Carregando from './Carregando';
 
@@ -28,19 +29,6 @@ class Header extends React.Component {
     });
   }
 
-  // handleClick = () => {
-  //   const { inputName } = this.state;
-  //   this.setState({
-  //     loading: true,
-  //   });
-  //   createUser({ name: inputName }).then(() => {
-  //     this.setState({
-  //       loading: false,
-  //       redirect: true,
-  //     });
-  //   });
-  // }
-
   render() {
     const { loading, inputName } = this.state;
 
@@ -48,16 +36,20 @@ class Header extends React.Component {
       return <Carregando />;
     }
 
-    // if (loading) {
-    //   return <Carregando />;
-    // }
-    // if (redirect) {
-    //   return <Redirect to="/search" />;
-    // }
-
     return (
       <header data-testid="header-component">
         <h4 data-testid="header-user-name">{inputName}</h4>
+
+        <Link data-testid="link-to-search" to="/search">
+          Search
+        </Link>
+        <Link data-testid="link-to-favorites" to="/favorites">
+          Search
+        </Link>
+        <Link data-testid="link-to-profile" to="/profile">
+          Search
+        </Link>
+
       </header>
     );
   }
