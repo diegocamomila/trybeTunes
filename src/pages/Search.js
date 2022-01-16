@@ -54,7 +54,7 @@ class Search extends React.Component {
       inputNameBand,
       isDisabled,
       loading,
-      // artist,
+      artist,
       // dataBand,
     } = this.state;
 
@@ -86,6 +86,10 @@ class Search extends React.Component {
             Pesquisar
           </button>
         </form>
+
+        <div>
+          <h4>{`Resultado de álbuns de: ${artist}`}</h4>
+        </div>
 
       </div>
     );
