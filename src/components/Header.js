@@ -40,15 +40,9 @@ class Header extends React.Component {
       <header data-testid="header-component">
         <h4 data-testid="header-user-name">{inputName}</h4>
 
-        <Link data-testid="link-to-search" to="/search">
-          Search
-        </Link>
-        <Link data-testid="link-to-favorites" to="/favorites">
-          Search
-        </Link>
-        <Link data-testid="link-to-profile" to="/profile">
-          Search
-        </Link>
+        <Link data-testid="link-to-search" to="/search" />
+        <Link data-testid="link-to-favorites" to="/favorites" />
+        <Link data-testid="link-to-profile" to="/profile" />
 
       </header>
     );

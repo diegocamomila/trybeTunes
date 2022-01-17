@@ -26,9 +26,11 @@ class Search extends React.Component {
     const { inputNameBand } = this.state;
     const dataAPI = await searchAlbumsAPI(inputNameBand);
     const falhaAPI = dataAPI.length === 0;
+    console.log(dataAPI);
+
     this.setState({
-      inputNameBand: '',
       artist: inputNameBand,
+      inputNameBand: '',
       dataBand: dataAPI,
       errorAPI: falhaAPI,
     });
@@ -82,7 +84,7 @@ class Search extends React.Component {
 
           <button
             data-testid="search-artist-button"
-            type="submit"
+            type="button"
             disabled={ isDisabled }
             onClick={ this.handleClick }
           >
@@ -98,17 +100,17 @@ class Search extends React.Component {
         <section>
           {dataBand
             .map(({ artistName, collectionName, artworkUrl100, collectionId }) => (
-              <>
-                <Link
-                  key={ collectionId }
-                  to={ `album/${collectionId}` }
-                  data-testid={ `link-to-album-${collectionId}` }
-                />
-                {/* </Link> */}
+
+              <Link
+                key={ collectionId }
+                to={ `album/${collectionId}` }
+                data-testid={ `link-to-album-${collectionId}` }
+              >
                 <img src={ artworkUrl100 } alt={ collectionName } />
                 <p>{ collectionName }</p>
                 <p>{ artistName }</p>
-              </>
+              </Link>
+
             ))}
         </section>
       </div>
