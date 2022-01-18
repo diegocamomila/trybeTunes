@@ -1,9 +1,7 @@
 import React from 'react';
-import PropTaypes from 'prop-types';
 
 class MusicCard extends React.Component {
   render() {
-    const { trackName, previewUrl } = this.props;
     return (
       <div>
         {/* exibir o nome da música (propriedade trackName no objeto recebido pela API) */}
@@ -13,16 +11,19 @@ class MusicCard extends React.Component {
           <track kind="captions" />
           O seu navegador não suporta o elemento
           <code>audio</code>
-          .
+          <label htmlFor={ `checkbox-music-${trackId}` }>
+            Favorita
+            <input
+              type="checkbox"
+              checked={ favorite }
+              onChange={ this.handleCheck }
+              data-testid={ `checkbox-music-${trackId}` }
+            />
+          </label>
         </audio>
       </div>
     );
   }
 }
-
-MusicCard.propTaypes = {
-  trackName: PropTaypes.string.isRequired,
-  previewUrl: PropTaypes.string.isRequired,
-}.isRequirid;
 
 export default MusicCard;
