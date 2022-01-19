@@ -9,60 +9,51 @@ class Album extends React.Component {
     super();
 
     this.state = {
-      listMusic: [],
+      artistName: '',
       albumName: '',
-      bandName: '',
-      albumImage: '',
+      albumList: [],
     };
+    this.musicsApi = this.musicsApi.bind(this);
   }
 
   componentDidMount() {
-    const {
-      match: { params: { id } },
-    } = this.props;
+    this.musicsApi();
+  }
 
-    getMusics(id).then((musics) => {
-      const musicsAPI = musics;
-      console.log(musics);
-      const songs = musicsAPI.filter(({ kind }) => kind === 'song'); // kind === 'song' tirado de dentro do retorno da api cisto no console
-      this.setState({
-        albumName: musicsAPI[0].collectionName,
-        bandName: musicsAPI[0].artistName,
-        albumImage: musicsAPI[0].artworkUrl100,
-        listMusic: songs,
-      });
+  async musicsApi() {
+    const { match: { params: { id } } } = this.props;
+    const getMusicColections = await getMusics(id);
+    this.setState({
+      artistName: getMusicColections[0].artistName,
+      albumName: getMusicColections[0].collectionName,
+      albumList: getMusicColections.slice(1),
     });
   }
 
   render() {
-    const { listMusic, albumName, bandName, albumImage } = this.state;
+    const { artistName, albumName, albumList } = this.state;
     return (
+
       <div data-testid="page-album">
         <Header />
-        <section>
-          <p data-testid="artist-name">{ bandName }</p>
-          <p data-testid="album-name">{ albumName }</p>
-          <img src={ albumImage } alt={ albumName } />
-        </section>
-        <section>
-          {/* map na lista de musica usando usando componente music card */}
-          {listMusic.map(({ trackName, previewUrl, trackId }) => (
+        <h1 data-testid="artist-name">{ artistName }</h1>
+        <h2 data-testid="album-name">{ albumName }</h2>
+        { albumList.map(({ trackName, previewUrl, trackId }) => (
+          <div key={ trackId }>
             <MusicCard
-              key={ trackId }
-              trackName={ trackName }
-              previewUrl={ previewUrl }
+              musicName={ trackName }
+              playMusic={ previewUrl }
             />
-          ))}
-        </section>
+          </div>
+        ))}
       </div>
+
     );
   }
 }
 
 Album.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.objectOf(PropTypes.string),
-  }),
+  id: PropTypes.string.isRequired,
 }.isRequired;
 
 export default Album;
