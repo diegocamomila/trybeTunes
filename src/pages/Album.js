@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import getMusics from '../services/musicsAPI';
 import MusicCard from '../components/MusicCard';
+import Carregando from '../components/Carregando';
+import { getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 class Album extends React.Component {
   constructor() {
@@ -12,12 +14,28 @@ class Album extends React.Component {
       artistName: '',
       albumName: '',
       albumList: [],
+      loading: false,
+      listGetFavorites: [],
     };
     this.musicsApi = this.musicsApi.bind(this);
+    this.getFavorites = this.getFavorites.bind(this);
   }
 
   componentDidMount() {
     this.musicsApi();
+    this.getFavorites();
+  }
+
+  async getFavorites() {
+    this.setState({
+      loading: true,
+    }, async () => {
+      const recoveredSongs = await getFavoriteSongs();
+      this.setState({
+        loading: false,
+        listGetFavorites: recoveredSongs,
+      });
+    });
   }
 
   async musicsApi() {
@@ -31,23 +49,29 @@ class Album extends React.Component {
   }
 
   render() {
-    const { artistName, albumName, albumList } = this.state;
+    const { artistName, albumName, albumList, loading, listGetFavorites } = this.state;
     return (
 
       <div data-testid="page-album">
         <Header />
         <h1 data-testid="artist-name">{ artistName }</h1>
         <h2 data-testid="album-name">{ albumName }</h2>
-        { albumList.map(({ trackName, previewUrl, trackId }) => (
-          <div key={ trackId }>
-            <MusicCard
-              musicName={ trackName }
-              playMusic={ previewUrl }
-              trackId={ trackId }
-              albumData={ albumList }
-            />
-          </div>
-        ))}
+        { loading ? (
+          <Carregando />
+        ) : (
+          albumList.map(({ trackName, previewUrl, trackId }) => (
+            <div key={ trackId }>
+              <MusicCard
+                musicName={ trackName }
+                playMusic={ previewUrl }
+                trackId={ trackId }
+                albumData={ albumList }
+                listFavorites={ listGetFavorites }
+              />
+            </div>
+          ))
+        )}
+        {}
       </div>
 
     );

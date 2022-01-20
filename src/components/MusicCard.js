@@ -9,8 +9,14 @@ class MusicCard extends React.Component {
 
     this.state = {
       loading: false,
+      buttonChecked: false,
     };
     this.checkChange = this.checkChange.bind(this);
+    this.checkFavorites = this.checkFavorites.bind(this);
+  }
+
+  componentDidMount() {
+    this.checkFavorites();
   }
 
   checkChange({ target }) {
@@ -19,6 +25,7 @@ class MusicCard extends React.Component {
 
     this.setState({
       loading: true,
+      buttonChecked: true,
     }, async () => {
       await addSong(favoriteMusic);
       this.setState({
@@ -27,9 +34,19 @@ class MusicCard extends React.Component {
     });
   }
 
+  checkFavorites() {
+    const { listFavorites, trackId } = this.props;
+    const favorite = listFavorites.some((music) => music.trackId === trackId);
+    if (favorite) {
+      this.setState({
+        buttonChecked: true,
+      });
+    }
+  }
+
   render() {
     const { musicName, playMusic, trackId } = this.props;
-    const { loading } = this.state;
+    const { loading, buttonChecked } = this.state;
 
     return (
       <div>
@@ -51,6 +68,7 @@ class MusicCard extends React.Component {
             id={ trackId }
             data-testid={ `checkbox-music-${trackId}` }
             onClick={ this.checkChange }
+            checked={ buttonChecked }
           />
         </label>
       </div>
