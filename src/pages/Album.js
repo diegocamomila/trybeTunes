@@ -43,6 +43,8 @@ class Album extends React.Component {
             <MusicCard
               musicName={ trackName }
               playMusic={ previewUrl }
+              trackId={ trackId }
+              albumData={ albumList }
             />
           </div>
         ))}
