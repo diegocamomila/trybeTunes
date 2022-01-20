@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Carregando from './Carregando';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, removeSong } from '../services/favoriteSongsAPI';
 
 class MusicCard extends React.Component {
   constructor() {
@@ -12,26 +12,38 @@ class MusicCard extends React.Component {
       buttonChecked: false,
     };
     this.checkChange = this.checkChange.bind(this);
-    this.checkFavorites = this.checkFavorites.bind(this);
+    // this.checkFavorites = this.checkFavorites.bind(this);
   }
 
   componentDidMount() {
     this.checkFavorites();
   }
 
-  checkChange({ target }) {
+  checkChange = async ({ target }) => {
     const { albumData } = this.props;
-    const favoriteMusic = albumData.find((music) => (music.trackId === target.id));
+    const favoriteMusic = albumData.filter((music) => (music.trackId === target.id));
+    const { buttonChecked } = this.state;
 
     this.setState({
       loading: true,
-      buttonChecked: true,
-    }, async () => {
-      await addSong(favoriteMusic);
-      this.setState({
-        loading: false,
-      });
+      buttonChecked: !buttonChecked,
     });
+    if (!buttonChecked) {
+      await addSong(favoriteMusic);
+    } else {
+      await removeSong(favoriteMusic);
+    }
+    this.setState({ loading: false });
+
+    // this.setState({
+    //   loading: true,
+    //   buttonChecked: true,
+    // }, async () => {
+    //   await addSong(favoriteMusic);
+    //   this.setState({
+    //     loading: false,
+    //   });
+    // });
   }
 
   checkFavorites() {
